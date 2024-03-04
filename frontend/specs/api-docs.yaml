@@ -1,0 +1,174 @@
+openapi: 3.0.0
+info:
+  title: "Books API"
+  description: "書籍管理 DB の API"
+  version: 1.0.0
+servers:
+  - url: "http://localhost:3001"
+    description: 開発環境
+paths:
+  /books:
+    get:
+      tags:
+        - books
+      summary: 書籍リスト取得
+      description: 全書籍のリストを絞り込みなしで取得します。
+      operationId: ListupBooks
+      responses:
+        200:
+          description: 書籍リストを正常に取得しました。
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Book"
+    post:
+      tags:
+        - books
+      summary: 書籍登録
+      description: 書籍を登録し登録後の書籍を取得します。
+      operationId: CreateBook
+      requestBody:
+        description: StoreBook
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoreBook"
+      responses:
+        201:
+          description: 書籍を正常に登録しました。
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+  "/books/{id}":
+    get:
+      tags:
+        - books
+      summary: 書籍取得
+      description: 書籍を取得します。
+      operationId: GetBook
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: 取得対象書籍のid
+            type: integer
+            format: int64
+            example: 0
+      responses:
+        200:
+          description: 書籍を正常に取得しました。
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        404:
+          description: 取得対象の書籍が存在しません。
+    put:
+      tags:
+        - books
+      summary: 書籍更新
+      description: 書籍を更新し更新後の書籍を取得します。
+      operationId: UpdateBook
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: 更新対象書籍のid
+            type: integer
+            format: int64
+            example: 0
+      requestBody:
+        description: StoreBook
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoreBook"
+      responses:
+        201:
+          description: 書籍を正常に更新しました。
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Book"
+        404:
+          description: 更新対象の書籍が存在しません。
+    delete:
+      tags:
+        - books
+      summary: 書籍削除
+      description: 書籍を削除します。
+      operationId: DeleteBook
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: 削除対象書籍のid
+            type: integer
+            format: int64
+            example: 0
+      responses:
+        200:
+          description: 書籍を正常に削除しました。
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Book"
+        404:
+          description: 削除対象の書籍が存在しません。
+components:
+  schemas:
+    StoreBook:
+      title: StoreBook
+      description: 書籍のタイトルおよび著者をもつリクエスト
+      required:
+        - title
+        - author
+      properties:
+        title:
+          description: 書籍名
+          type: string
+          example: 吾輩は猫である
+          nullable: false
+        author:
+          description: 著者
+          type: string
+          example: 夏目漱石
+          nullable: false
+      type: object
+    Book:
+      title: Book
+      description: 書籍のタイトルおよび著者をもつクラス
+      required:
+        - title
+        - author
+      properties:
+        id:
+          description: id
+          type: integer
+          format: int64
+          example: 0
+          nullable: false
+        title:
+          description: 書籍名
+          type: string
+          example: 吾輩は猫である
+          nullable: false
+        author:
+          description: 著者
+          type: string
+          example: 夏目漱石
+          nullable: false
+      type: object
+tags:
+  - name: books
+    description: "書籍自体に関する API 群"
