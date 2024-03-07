@@ -23,12 +23,12 @@ app.use((0, cors_1.default)({
 // このサーバーは json でやりとりできるようにする
 app.use(express_1.default.json());
 // テスト用に処理時間を引き延ばす
-// const sleep = (msec: number) =>
-//     new Promise(resolve => setTimeout(resolve, msec));
-// app.use(async (req, res, next) => {
-//     await sleep(1000);
-//     next();
-// });
+const sleep = (msec) => new Promise(resolve => setTimeout(resolve, msec));
+app.use(async (req, res, next) => {
+    // await sleep(1000);
+    console.log('req :', req.url, req.method);
+    next();
+});
 // サーバーを起動してターミナルにメッセージを出力する
 app.listen(port, host, () => { console.log(message); });
 // データベースの代わりにファイルを使う
